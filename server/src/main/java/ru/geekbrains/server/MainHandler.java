@@ -39,6 +39,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             //ctx.writeAndFlush(new CommandMessage(FILE_LIST_SEND, Files.list(Paths.get("server_storage")).collect(Collectors.toList())));
             //ctx.writeAndFlush(Files.list(Paths.get("server_storage")).collect(Collectors.toList()));
             ctx.write(Files.list(Paths.get("server_storage")).collect(Collectors.toList()));
+            ctx.flush();
 
         }
 

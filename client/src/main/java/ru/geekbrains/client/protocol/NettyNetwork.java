@@ -86,18 +86,6 @@ for (int i = 0; i < fullChunksCount; i++) {
                 }
             }
         }
-
-//        buf.writeByte(15);
-//
-//        buf.writeLong(8L);
-//
-//
-//
-//        for (byte b : "test.txt".getBytes()) {
-//            buf.writeByte(b);
-//        }
-//
-//        currentChannel.writeAndFlush(buf);
     }
 
     public boolean isConnectionOpened() {

@@ -1,30 +1,32 @@
 package ru.geekbrains.common;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileListMessage extends AbstractMessage {
 
-    private List<String> fileListName;
-    //private byte[] data;
+    private List<FileAbout> fileListName=new ArrayList<>();
 
-    public List<String> getListFilename() {
+    public List<FileAbout> getListFilename() {
         return fileListName;
     }
 
-    //public byte[] getData() {
-      //  return data;
-    //}
-
     public FileListMessage(Path path) throws IOException {
-        Files.list(path).collect(Collectors.toList()).forEach(p->fileListName.add(p.getFileName().toString()));
-        /*for (Path path1:Files.list(path).collect(Collectors.toList())) {
-            fileListName.add(path1.getFileName().toString());
-        }*/
+        //fileListName=null;
+       // Files.list(path).map(Path::toFile)
+        for (Object str:Files.list(path).map(Path::toFile).toArray()) {
+            File file=new File(str.toString());
+            fileListName.add(new FileAbout(file,file.getName(),file.length()));
+            System.out.println(str.toString());
+            //fileListName.add(str.toString());
+        }
+        //Files.list(path).collect(Collectors.toList()).forEach(p->fileListName.add(p.getFileName().toString()));
+        //fileListName=Files.list(path).collect(Collectors.toList());
+       // fileListName= Files.list(path).map(Path::toFile).map(FileAbout::new).collect(Collectors.toList());
     }
 }

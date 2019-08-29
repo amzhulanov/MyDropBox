@@ -41,15 +41,10 @@ public class MainController implements Initializable {
                         Files.write(Paths.get("client_storage/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalFilesList();
                     }
-                    if (((CommandMessage) am).getCommandMessage().equals(FILE_LIST_SEND)){//если получен ответ от сервера с командой File_List_Send
-                        FileListMessage fml=(FileListMessage) am;
-                        filesListServer.getItems().clear();
-                        fml.getListFilename().forEach(o->filesListServer.getItems().add(o));
-
+                    if (am instanceof FileListMessage){//если получен ответ от сервера с командой File_List_Send
+                        refreshServerFileList((FileListMessage) am);//обновляю список файлов сервера
                         System.out.println("Получен список файлов с сервера");
-
                     }
-                    filesListServer.getItems().add("test1");
                 }
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
@@ -94,5 +89,10 @@ public class MainController implements Initializable {
                 }
             });
         }
+    }
+
+    private void refreshServerFileList(FileListMessage flm){
+        filesListServer.getItems().clear();
+        flm.getListFilename().forEach(o->filesListServer.getItems().add(o.getFilename()));
     }
 }

@@ -19,7 +19,7 @@ import static ru.geekbrains.common.CommandMessage.FILE_LIST_REQUEST;
 import static ru.geekbrains.common.CommandMessage.FILE_LIST_SEND;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
-    @Override
+    @Override//сервер считывает информацию из канала
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
             if (msg == null) {
@@ -34,17 +34,15 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             }
             //обрабатываю запрос списка файлов на сервере
             if (((CommandMessage) msg).getCommandMessage().equals(FILE_LIST_REQUEST)) {
+                //создаю список файлов на сервере
+                FileListMessage flm=new FileListMessage(Paths.get("server_storage"));
 
-            //список файлов с server_storage через Stream отправляю в ответном сообщении.
-            //ctx.writeAndFlush(new CommandMessage(FILE_LIST_SEND, Files.list(Paths.get("server_storage")).collect(Collectors.toList())));
-            //ctx.writeAndFlush(Files.list(Paths.get("server_storage")).collect(Collectors.toList()));
-            ctx.write(Files.list(Paths.get("server_storage")).collect(Collectors.toList()));
-            ctx.flush();
-
+            //список файлов с server_storage отправляю в ответном сообщении.
+                ctx.writeAndFlush(flm);
+                System.out.println("Отправлен список файлов");
         }
 
-        }// finally {
-        catch(Exception e){
+        } finally {
             ReferenceCountUtil.release(msg);
         }
     }

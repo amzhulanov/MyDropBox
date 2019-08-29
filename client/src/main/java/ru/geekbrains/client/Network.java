@@ -55,7 +55,7 @@ public class Network {
     }
 
     public static AbstractMessage readObject() throws ClassNotFoundException, IOException {
-        Object obj = in.readObject();
-        return (AbstractMessage) obj;
+        Object obj = in.readObject();//клиент постоянно читает канал
+        return (AbstractMessage) obj; //приводит полученный объект к типу Абстрактного сообщения и возвращает
     }
 }

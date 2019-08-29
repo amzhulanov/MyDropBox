@@ -16,7 +16,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
 
 import static ru.geekbrains.common.CommandMessage.FILE_LIST_REQUEST;
-import static ru.geekbrains.common.CommandMessage.FILE_LIST_SEND;
 
 public class MainController implements Initializable {
     @FXML
@@ -54,8 +53,8 @@ public class MainController implements Initializable {
         });
         t.setDaemon(true);
         t.start();
-        refreshLocalFilesList();
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST));
+        refreshLocalFilesList();//first refresh
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST));//first refresh
     }
 
     public void pressOnDownloadBtn(ActionEvent actionEvent) {

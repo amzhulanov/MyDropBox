@@ -1,10 +1,7 @@
 package ru.geekbrains.server;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 import io.netty.channel.ChannelHandlerContext;
@@ -16,7 +13,6 @@ import ru.geekbrains.common.FileMessage;
 import ru.geekbrains.common.FileRequest;
 
 import static ru.geekbrains.common.CommandMessage.FILE_LIST_REQUEST;
-import static ru.geekbrains.common.CommandMessage.FILE_LIST_SEND;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
     @Override//сервер считывает информацию из канала
@@ -36,12 +32,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             if (((CommandMessage) msg).getCommandMessage().equals(FILE_LIST_REQUEST)) {
                 //создаю список файлов на сервере
                 FileListMessage flm=new FileListMessage(Paths.get("server_storage"));
-
             //список файлов с server_storage отправляю в ответном сообщении.
                 ctx.writeAndFlush(flm);
                 System.out.println("Отправлен список файлов");
         }
-
         } finally {
             ReferenceCountUtil.release(msg);
         }

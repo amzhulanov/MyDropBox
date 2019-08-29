@@ -56,17 +56,6 @@ public class NettyNetwork {
         }
     }
 
-    /*
-    byteBuf = allocator.buffer(256);
-for (int i = 0; i < fullChunksCount; i++) {
-	is.read(buf);
-	System.out.println("Sending filechunk: " + Arrays.toString(buf));
-	byteBuf.writeBytes(buf);
-	ctx.writeAndFlush(byteBuf);
-	// byteBuf.clear();
-}
-     */
-
     public void sendData() {
         ByteBufAllocator allocator = new PooledByteBufAllocator();
         ByteBuf buf = allocator.buffer(16);

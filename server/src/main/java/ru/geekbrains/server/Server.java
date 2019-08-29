@@ -13,9 +13,9 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class Server {
-    private int maxObjSize=50*1024*1024;
+    private final static int MAX_OBJ_SIZE =50*1024*1024;
     private int inetPort=8189;
-
+//Start Server
     public void run() throws Exception {
         EventLoopGroup mainGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -26,7 +26,7 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(
-                                    new ObjectDecoder(maxObjSize, ClassResolvers.cacheDisabled(null)),
+                                    new ObjectDecoder(MAX_OBJ_SIZE, ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
                                     new MainHandler()
                             );

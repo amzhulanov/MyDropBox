@@ -9,18 +9,17 @@ import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
 public class Network {
+    private final static int MAX_OBJ_SIZE =50*1024*1024;
+    
     private static Socket socket;
     private static ObjectEncoderOutputStream out;
     private static ObjectDecoderInputStream in;
-
-
-
 
     public static void start() {
         try {
             socket = new Socket("localhost", 8189);
             out = new ObjectEncoderOutputStream(socket.getOutputStream());
-            in = new ObjectDecoderInputStream(socket.getInputStream(), 50 * 1024 * 1024);
+            in = new ObjectDecoderInputStream(socket.getInputStream(), MAX_OBJ_SIZE);
         } catch (IOException e) {
             e.printStackTrace();
         }

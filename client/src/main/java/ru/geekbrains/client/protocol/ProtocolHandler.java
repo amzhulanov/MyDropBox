@@ -9,10 +9,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 
 public class ProtocolHandler extends ChannelInboundHandlerAdapter {
-    private int state = -1;
     private HashMap<String, Object> map = new HashMap<>();
-
-
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

@@ -1,27 +1,18 @@
 package ru.geekbrains.client;//package main.java;
+/**
+ * @author JAM amzhulanov@ya.ru
+ * */
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ru.geekbrains.client.protocol.ProtocolHandler;
-
-
-
-/**
- * @author JAM amzhulanov@ya.ru
- * */
-
 
 public class MainClient extends Application {
 
-
     @Override
     public void start(Stage primaryStage) throws Exception{
-
-
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/main.fxml"));
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Box Client");
@@ -32,7 +23,5 @@ public class MainClient extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
-
     }
 }

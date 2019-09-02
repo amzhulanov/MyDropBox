@@ -9,8 +9,8 @@ import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
 public class Network {
-    private final static int MAX_OBJ_SIZE =50*1024*1024;
-    
+    private final static int MAX_OBJ_SIZE = 50 * 1024 * 1024;
+
     private static Socket socket;
     private static ObjectEncoderOutputStream out;
     private static ObjectDecoderInputStream in;

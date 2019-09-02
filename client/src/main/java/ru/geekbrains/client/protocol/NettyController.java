@@ -14,8 +14,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 public class NettyController implements Initializable {
-    @FXML
-    TextField tfFileName;
 
     @FXML
     ListView<String> filesListClient;

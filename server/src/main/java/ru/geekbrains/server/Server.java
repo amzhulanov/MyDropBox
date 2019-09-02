@@ -14,9 +14,8 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class Server {
     private final static int MAX_OBJ_SIZE =50*1024*1024;
-    private int inetPort=8189;
-//Start Server
-    public void run() throws Exception {
+
+    private void run() throws Exception {
         EventLoopGroup mainGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -34,6 +33,7 @@ public class Server {
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
+            int inetPort = 8189;
             ChannelFuture future = b.bind(inetPort).sync();
             future.channel().closeFuture().sync();
         } finally {

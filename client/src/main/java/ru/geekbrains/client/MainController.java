@@ -1,37 +1,46 @@
 package ru.geekbrains.client;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import ru.geekbrains.common.*;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
 
-import static ru.geekbrains.common.CommandMessage.FILE_DELETE;
-import static ru.geekbrains.common.CommandMessage.FILE_LIST_REQUEST;
+import static ru.geekbrains.common.CommandMessage.*;
 
 public class MainController implements Initializable {
 
-    private final String CLIENT_STORAGE="client_storage/";
+    private final String CLIENT_STORAGE = "client_storage/";
 
-    private String tfFileName;
+
     @FXML
     ListView<String> filesListClient;
 
     @FXML
     ListView<String> filesListServer;
 
+    @FXML private Button logoutButton;
+    @FXML private Label sessionLabel;
+
+    public void initialize() {
+        
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println(location);
         Network.start();
-
 
         Thread t = new Thread(() -> {
             try {
@@ -39,8 +48,8 @@ public class MainController implements Initializable {
                     AbstractMessage am = Network.readObject();
                     if (am instanceof FileMessage) {
                         FileMessage fm = (FileMessage) am;
-                        Files.write(Paths.get(CLIENT_STORAGE + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
-                        refreshLocalFilesList();
+                        Files.write(Paths.get(CLIENT_STORAGE +((FileMessage) am).getUser()+"/"+ fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
+                        refreshLocalFilesList(((FileMessage) am).getUser());
                     }
                     if (am instanceof FileListMessage) {
                         refreshServerFileList((FileListMessage) am);//
@@ -51,46 +60,45 @@ public class MainController implements Initializable {
             } finally {
                 Network.stop();
             }
+
         });
         t.setDaemon(true);
         t.start();
 
-        refreshLocalFilesList();//first refresh
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST));//first refresh
+
+        //refreshLocalFilesList(sessionLabel.getText());//first refresh
+        //Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));//first refresh
     }
 
     public void pressBtnSendFileToServer() throws IOException {
-        tfFileName= filesListClient.getSelectionModel().selectedItemProperty().getValue() ;
-        System.out.println("tfFileName = "+tfFileName);
-        Path path=Paths.get(CLIENT_STORAGE +tfFileName);
-        System.out.println("pressBtnSendFileToServer = "+path.getFileName());
-        Network.sendMsg(new FileMessage(path));
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST));
+        Network.sendMsg(new FileMessage(Paths.get(CLIENT_STORAGE +sessionLabel.getText()+"/"+ filesListClient.getSelectionModel().selectedItemProperty().getValue()),sessionLabel.getText()));
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));
     }
+
     //download from Server
     public void pressBtnDownloadFromServer() {
-        tfFileName= filesListServer.getSelectionModel().selectedItemProperty().getValue() ;
-        if (tfFileName.length() > 0) {
-            Network.sendMsg(new FileRequest(tfFileName));
-            tfFileName = null;
+        try {
+            Network.sendMsg(new FileRequest(filesListServer.getSelectionModel().selectedItemProperty().getValue(),sessionLabel.getText()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     //reqest File list from Server for Client
     public void pressOnRequestFileListServerBtn() {
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST));
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));
     }
 
     public void pressOnRequestFileListClientBtn() {
-        refreshLocalFilesList();
+        refreshLocalFilesList(sessionLabel.getText());
     }
 
     //read File list on Client
-    private void refreshLocalFilesList() {
+    private void refreshLocalFilesList(String user) {
         if (Platform.isFxApplicationThread()) {
             try {
                 filesListClient.getItems().clear();
-                Files.list(Paths.get(CLIENT_STORAGE)).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
+                Files.list(Paths.get(CLIENT_STORAGE+user+"/")).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,7 +106,7 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 try {
                     filesListClient.getItems().clear();
-                    Files.list(Paths.get(CLIENT_STORAGE)).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
+                    Files.list(Paths.get(CLIENT_STORAGE+user+"/")).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -106,7 +114,7 @@ public class MainController implements Initializable {
         }
     }
 
-//read File list on Server
+    //read File list on Server
     private void refreshServerFileList(FileListMessage flm) {
         if (Platform.isFxApplicationThread()) {
             filesListServer.getItems().clear();
@@ -118,27 +126,31 @@ public class MainController implements Initializable {
             });
         }
     }
-//Delete File From Server and read Filelist from Server
-    public void pressBtnDeleteFromServer()  {
-        tfFileName= filesListServer.getSelectionModel().selectedItemProperty().getValue() ;
-        if (tfFileName.length() > 0) {
-            Network.sendMsg(new CommandMessage(FILE_DELETE,new FileRequest(tfFileName)));
-            tfFileName = null;
-        }
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST));
 
+    //Delete File From Server and read Filelist from Server
+    public void pressBtnDeleteFromServer() {
+        try {
+            Network.sendMsg(new CommandMessage(FILE_DELETE,sessionLabel.getText(), new FileRequest(filesListServer.getSelectionModel().selectedItemProperty().getValue(),sessionLabel.getText())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));
     }
+
     //Delete File From Client and read Filelist from Client
     public void pressBtnDeleteFromClient() throws IOException {
-        tfFileName= filesListClient.getSelectionModel().selectedItemProperty().getValue() ;
-        if (Files.exists(Paths.get(CLIENT_STORAGE + tfFileName))) {
-            Files.delete(Paths.get(CLIENT_STORAGE + tfFileName));
+        if (Files.exists(Paths.get(CLIENT_STORAGE +sessionLabel.getText()+"/"+ filesListClient.getSelectionModel().selectedItemProperty().getValue()))) {
+            Files.delete(Paths.get(CLIENT_STORAGE +sessionLabel.getText()+"/"+ filesListClient.getSelectionModel().selectedItemProperty().getValue()));
         }
-        tfFileName = null;
-        refreshLocalFilesList();
-
+        refreshLocalFilesList(sessionLabel.getText());
     }
 
-
-
+    public void initSessionID(final LoginManager loginManager, String sessionID) {
+        sessionLabel.setText(sessionID);
+        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent event) {
+                loginManager.logout();
+            }
+        });
+    }
 }

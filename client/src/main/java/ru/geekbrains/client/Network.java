@@ -7,9 +7,10 @@ import ru.geekbrains.common.AbstractMessage;
 
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
+import ru.geekbrains.common.AuthMessage;
 
 public class Network {
-    private final static int MAX_OBJ_SIZE = 50 * 1024 * 1024;
+    private final static int MAX_OBJ_SIZE = 300 * 1024 * 1024;
 
     private static Socket socket;
     private static ObjectEncoderOutputStream out;
@@ -43,14 +44,20 @@ public class Network {
         }
     }
 
-    public static boolean sendMsg(AbstractMessage msg) {
+    public static void sendMsg(AbstractMessage msg) {
         try {
             out.writeObject(msg);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+    }
+
+    public static AbstractMessage sendLogin(AuthMessage msg) throws ClassNotFoundException, IOException {
+        start();
+        out.writeObject(msg);
+        Object obj = in.readObject();//клиент постоянно читает канал
+        stop();
+        return (AbstractMessage) obj;
     }
 
     public static AbstractMessage readObject() throws ClassNotFoundException, IOException {

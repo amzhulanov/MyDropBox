@@ -4,17 +4,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.geekbrains.common.CommandMessage;
-import ru.geekbrains.common.FileListMessage;
-import ru.geekbrains.common.FileMessage;
-import ru.geekbrains.common.FileRequest;
+import ru.geekbrains.common.*;
+import ru.geekbrains.server.authorization.*;
 
-import static ru.geekbrains.common.CommandMessage.FILE_DELETE;
-import static ru.geekbrains.common.CommandMessage.FILE_LIST_REQUEST;
+import static ru.geekbrains.common.CommandMessage.*;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
@@ -23,33 +22,41 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            if (msg == null) {
-                return;
-            }
-            if (msg instanceof FileRequest) {
-                FileRequest fr = (FileRequest) msg;
-                if (Files.exists(Paths.get(SERVER_STORAGE + fr.getFilename()))) {
-                    FileMessage fm = new FileMessage(Paths.get(SERVER_STORAGE + fr.getFilename()));
-                    ctx.writeAndFlush(fm);
+            if (msg != null) {
+                if (msg instanceof AuthMessage) {
+                    checkUserLogin(ctx,(AuthMessage) msg);
+                } else if (msg instanceof FileRequest) {
+                    fileListRequest(ctx, (FileRequest) msg,((FileRequest) msg).getUser());
+                } else if (msg instanceof FileMessage) {
+                    fileWriteToServer((FileMessage) msg,((FileMessage) msg).getUser());
+                } else if (msg instanceof CommandMessage && ((CommandMessage) msg).getCommandMessage().equals(FILE_LIST_REQUEST)) {
+                    sendFileList(ctx,((CommandMessage) msg).getUser());
+                } else if (msg instanceof CommandMessage && ((CommandMessage) msg).getCommandMessage().equals(FILE_DELETE)) {
+                    deleteFileFromServer(((CommandMessage) msg).getAttachment(),((CommandMessage) msg).getUser());
                 }
-            } else if (msg instanceof FileMessage) {
-                FileMessage fm = (FileMessage) msg;
-                Files.write(Paths.get(SERVER_STORAGE + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
-            } else if (msg instanceof CommandMessage && ((CommandMessage) msg).getCommandMessage().equals(FILE_LIST_REQUEST)) {
-                FileListMessage flm = new FileListMessage(Paths.get(SERVER_STORAGE));
-                ctx.writeAndFlush(flm);
-            } else if (msg instanceof CommandMessage && ((CommandMessage) msg).getCommandMessage().equals(FILE_DELETE)) {
-                Object[] object = ((CommandMessage) msg).getAttachment();
-                delete(((FileRequest) object[0]).getFilename());
             }
         } finally {
             ReferenceCountUtil.release(msg);
         }
     }
 
-    private void delete(String filename) throws IOException {
-        if (Files.exists(Paths.get(SERVER_STORAGE + filename))) {
-            Files.delete(Paths.get(SERVER_STORAGE + filename));
+    private void fileListRequest(ChannelHandlerContext ctx, FileRequest fileRequest,String user) throws IOException {
+        if (Files.exists(Paths.get(SERVER_STORAGE +user+"/"+ fileRequest.getFilename()))) {
+            ctx.writeAndFlush(new FileMessage(Paths.get(SERVER_STORAGE +user+"/"+ fileRequest.getFilename()),user));
+        }
+    }
+
+    private void fileWriteToServer(FileMessage fm,String user) throws IOException {
+        Files.write(Paths.get(SERVER_STORAGE +user+"/"+ fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
+    }
+
+    private void sendFileList(ChannelHandlerContext ctx,String user) throws IOException {
+        ctx.writeAndFlush(new FileListMessage(Paths.get(SERVER_STORAGE+user+"/")));
+    }
+
+    private void deleteFileFromServer(Object[] object, String user) throws IOException {
+        if (Files.exists(Paths.get(SERVER_STORAGE +user+"/"+ ((FileRequest) object[0]).getFilename()))) {
+            Files.delete(Paths.get(SERVER_STORAGE +user+"/"+ ((FileRequest) object[0]).getFilename()));
         }
     }
 
@@ -58,4 +65,23 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.close();
     }
+
+    private void checkUserLogin(ChannelHandlerContext ctx, AuthMessage authMessage) {
+        User user = new User();
+        UserRepository userRepository;
+        try {
+            userRepository = new UserRepository(DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Novosibirsk", "root", "rootroot1"));
+        } catch (SQLException e) {
+            return;
+        }
+        try{user = userRepository.findByLogin(authMessage.getUser());
+        if (user != null && user.getPassword().equals(authMessage.getPassword())) {
+            ctx.writeAndFlush(new CommandMessage(AUTH_SUCCESS_RESPONSE,user.getLogin()));
+        } }catch (Exception e) {
+            ctx.writeAndFlush(new CommandMessage(AUTH_FAIL_RESPONSE));
+        }
+    }
+
+
+
 }

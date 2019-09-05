@@ -11,15 +11,24 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.geekbrains.server.authorization.UserRepository;
+import ru.geekbrains.server.authorization.AuthService;
+import ru.geekbrains.server.authorization.AuthServiceJdbcImpl;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Server {
-    private final static int MAX_OBJ_SIZE =50*1024*1024;
+    private final static int MAX_OBJ_SIZE = 300 * 1024 * 1024;
+
+
 
     private void run() throws Exception {
-        EventLoopGroup mainGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        final EventLoopGroup mainGroup = new NioEventLoopGroup();
+        final EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            ServerBootstrap b = new ServerBootstrap();
+            final ServerBootstrap b = new ServerBootstrap();
             b.group(mainGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -33,8 +42,8 @@ public class Server {
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            int inetPort = 8189;
-            ChannelFuture future = b.bind(inetPort).sync();
+            final int inetPort = 8189;
+            final ChannelFuture future = b.bind(inetPort).sync();
             future.channel().closeFuture().sync();
         } finally {
             mainGroup.shutdownGracefully();
@@ -44,6 +53,8 @@ public class Server {
 
     public static void main(String[] args) throws Exception {
         new Server().run();
-
     }
+
+
+
 }

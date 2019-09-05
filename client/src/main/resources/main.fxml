@@ -4,56 +4,83 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains.client.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.geekbrains.client.MainController">
 
-   <children>
+    <Label text="Привет " GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label fx:id="sessionLabel" layoutX="50" layoutY="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+    <Label alignment="CENTER" blendMode="HARD_LIGHT" prefHeight="50.0" prefWidth="300.0" text="Локальное хранилище"
+           textAlignment="CENTER" textFill="#c31616" textOverrun="CENTER_WORD_ELLIPSIS">
+        <opaqueInsets>
+            <Insets/>
+        </opaqueInsets>
+    </Label>
+
+    <ListView fx:id="filesListClient" layoutX="0.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0"/>
 
 
-      <Label alignment="CENTER" blendMode="HARD_LIGHT" prefHeight="50.0" prefWidth="300.0" text="Локальное хранилище" textAlignment="CENTER" textFill="#c31616" textOverrun="CENTER_WORD_ELLIPSIS">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Label>
-      <ListView fx:id="filesListClient" layoutX="0.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0" />
+    <Label alignment="CENTER" blendMode="HARD_LIGHT" layoutX="300.0" prefHeight="50.0" prefWidth="300.0"
+           text="Облачное хранилище" textAlignment="CENTER" textFill="#c31616" textOverrun="CENTER_WORD_ELLIPSIS">
+        <opaqueInsets>
+            <Insets/>
+        </opaqueInsets>
+    </Label>
 
-      <Label alignment="CENTER" blendMode="HARD_LIGHT" layoutX="300.0" prefHeight="50.0" prefWidth="300.0" text="Облачное хранилище" textAlignment="CENTER" textFill="#c31616" textOverrun="CENTER_WORD_ELLIPSIS">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Label>
-      <ListView fx:id="filesListServer" layoutX="300.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0" />
+    <ListView fx:id="filesListServer" layoutX="300.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0"/>
 
-      <Button layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" onAction="#pressBtnSendFileToServer" text="Отправить">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button layoutX="100.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" onAction="#pressBtnDeleteFromClient" text="Удалить">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button layoutX="200.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" onAction="#pressOnRequestFileListClientBtn" text="Обновить">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button layoutX="300.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" onAction="#pressBtnDownloadFromServer" text="Скачать">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button layoutX="400.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" onAction="#pressBtnDeleteFromServer" text="Удалить">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Button layoutX="500.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" onAction="#pressOnRequestFileListServerBtn" text="Обновить">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-   </children>
+    <Button layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0"
+            onAction="#pressBtnSendFileToServer" text="Отправить">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Button>
+    <Button layoutX="100.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0"
+            onAction="#pressBtnDeleteFromClient" text="Удалить">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Button>
+    <Button layoutX="200.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0"
+            onAction="#pressOnRequestFileListClientBtn" text="Обновить">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Button>
+    <Button layoutX="300.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0"
+            onAction="#pressBtnDownloadFromServer" text="Скачать">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Button>
+    <Button layoutX="400.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0"
+            onAction="#pressBtnDeleteFromServer" text="Удалить">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Button>
+    <Button layoutX="500.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0"
+            onAction="#pressOnRequestFileListServerBtn" text="Обновить">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Button>
+
+    <Button fx:id="logoutButton" layoutX="550.0" prefHeight="40.0" prefWidth="40.0" layoutY="0" defaultButton="true"
+            mnemonicParsing="false" text="Выход">
+        <graphic>
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="/logout.png"/>
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+
 </AnchorPane>

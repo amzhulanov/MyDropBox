@@ -11,16 +11,8 @@ public class FileAbout implements Serializable {
 
     private long filesize;
 
-    public File getFileAbout() {
-        return file;
-    }
-
     public String getFilename() {
         return filename;
-    }
-
-    public long getFilesize() {
-        return filesize;
     }
 
     public FileAbout(File file, String filename, long filesize) {

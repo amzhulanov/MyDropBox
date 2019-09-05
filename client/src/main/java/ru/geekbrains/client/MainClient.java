@@ -1,27 +1,35 @@
-package ru.geekbrains.client;//package main.java;
+package ru.geekbrains.client;
 /**
  * @author JAM amzhulanov@ya.ru
- * */
+ * Client DropBox
+ * <p>
+ * HomeWork geekbrains.ru
+ */
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class MainClient extends Application {
+    public LoginManager loginManager;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/main.fxml"));
-        Parent root = fxmlLoader.load();
+    public void start(Stage primaryStage) {
+        Scene scene = new Scene(new StackPane());
+         loginManager = new LoginManager(scene);
+        loginManager.showLoginScreen();
+
         primaryStage.setTitle("Box Client");
-        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public LoginManager getLoginManager() {
+        return loginManager;
     }
 }

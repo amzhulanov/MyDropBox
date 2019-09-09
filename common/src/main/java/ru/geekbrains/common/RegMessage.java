@@ -1,18 +1,16 @@
 package ru.geekbrains.common;
 
-public class AuthMessage extends AbstractMessage {
+public class RegMessage  extends AbstractMessage {
     private String user;
     private String name;
 
     private String password;
     private String passwordRepeat;
 
-    public AuthMessage(String user, String password) {
-        this.user = user;
-        this.password = password;
-    }
 
-    public AuthMessage(String user, String name, String password, String passwordRepeat) {
+
+
+    public RegMessage(String user, String name, String password, String passwordRepeat) {
         this.user = user;
         this.name=name;
         this.password = password;

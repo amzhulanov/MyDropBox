@@ -13,6 +13,7 @@ public class LoginManager {
         this.scene = scene;
     }
 
+
     public void authenticated(String sessionID) {
         showMainView(sessionID);
     }
@@ -31,7 +32,7 @@ public class LoginManager {
                     loader.<LoginController>getController();
             controller.initManager(this);
         } catch (IOException ex) {
-            System.out.println("showLoginScreen ex="+ex);
+            System.out.println("showLoginScreen ex=" + ex);
         }
     }
 
@@ -46,6 +47,20 @@ public class LoginManager {
             controller.initSessionID(this, sessionID);
         } catch (IOException ex) {
             System.out.println(ex);
+        }
+    }
+
+    public void regUserShowScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/regUser.fxml")
+            );
+            scene.setRoot((Parent) loader.load());
+            RegUserController controller =
+                    loader.<RegUserController>getController();
+            controller.initManager(this);
+        } catch (IOException ex) {
+            System.out.println("regUserShowScreen ex=" + ex);
         }
     }
 }

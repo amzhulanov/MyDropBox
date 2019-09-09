@@ -2,6 +2,7 @@ package ru.geekbrains.server.authorization;
 
 
 import ru.geekbrains.common.User;
+import ru.geekbrains.common.UserRepr;
 
 import java.sql.*;
 
@@ -21,7 +22,7 @@ public class UserRepository {
 
     }
 
-    public boolean insert(User user)  { //добавляю нового пользователя
+    public boolean insert(UserRepr user)  { //добавляю нового пользователя
         try {
             PreparedStatement preparedStatement=conn.prepareStatement("insert into users (login,password) values(?,?)");
             preparedStatement.setString(1,user.getLogin());
@@ -39,7 +40,7 @@ public class UserRepository {
 
     }
 
-    public User findByLogin(String login)  {//ищу пользователя в БД по логину
+    public UserRepr findByLogin(String login)  {//ищу пользователя в БД по логину
         boolean exist=false;
         ResultSet resultSet = null;
         try {
@@ -47,7 +48,7 @@ public class UserRepository {
 
             exist = resultSet.next();
             if (exist) {
-                return new User(resultSet.getInt(1),
+                return new UserRepr(resultSet.getInt(1),
                         resultSet.getString(2),
                         resultSet.getString(3));
             } else {

@@ -30,11 +30,13 @@ public class MainController implements Initializable {
     @FXML
     ListView<String> filesListServer;
 
-    @FXML private Button logoutButton;
-    @FXML private Label sessionLabel;
+    @FXML
+    private Button logoutButton;
+    @FXML
+    private Label sessionLabel;
 
     public void initialize() {
-        
+
     }
 
     @Override
@@ -48,12 +50,17 @@ public class MainController implements Initializable {
                     AbstractMessage am = Network.readObject();
                     if (am instanceof FileMessage) {
                         FileMessage fm = (FileMessage) am;
-                        Files.write(Paths.get(CLIENT_STORAGE +((FileMessage) am).getUser()+"/"+ fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
+                        Files.write(Paths.get(CLIENT_STORAGE + ((FileMessage) am).getUser() + "/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
                         refreshLocalFilesList(((FileMessage) am).getUser());
                     }
                     if (am instanceof FileListMessage) {
                         refreshServerFileList((FileListMessage) am);//
                     }
+                    if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_SUCCESS_RESPONSE)) {
+                        System.out.println("Не в том месте (MainController) получен ответ об успешной регистрации пользователя в базе");
+                        regUser((CommandMessage) am);
+                    }
+
                 }
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
@@ -66,19 +73,21 @@ public class MainController implements Initializable {
         t.start();
 
 
-        //refreshLocalFilesList(sessionLabel.getText());//first refresh
-        //Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));//first refresh
+        refreshLocalFilesList(sessionLabel.getText());//first refresh
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST, sessionLabel.getText()));//first refresh
     }
 
+
+    //send to Server
     public void pressBtnSendFileToServer() throws IOException {
-        Network.sendMsg(new FileMessage(Paths.get(CLIENT_STORAGE +sessionLabel.getText()+"/"+ filesListClient.getSelectionModel().selectedItemProperty().getValue()),sessionLabel.getText()));
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));
+        Network.sendMsg(new FileMessage(Paths.get(CLIENT_STORAGE + sessionLabel.getText() + "/" + filesListClient.getSelectionModel().selectedItemProperty().getValue()), sessionLabel.getText()));
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST, sessionLabel.getText()));
     }
 
     //download from Server
     public void pressBtnDownloadFromServer() {
         try {
-            Network.sendMsg(new FileRequest(filesListServer.getSelectionModel().selectedItemProperty().getValue(),sessionLabel.getText()));
+            Network.sendMsg(new FileRequest(filesListServer.getSelectionModel().selectedItemProperty().getValue(), sessionLabel.getText()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,7 +95,7 @@ public class MainController implements Initializable {
 
     //reqest File list from Server for Client
     public void pressOnRequestFileListServerBtn() {
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST, sessionLabel.getText()));
     }
 
     public void pressOnRequestFileListClientBtn() {
@@ -98,7 +107,7 @@ public class MainController implements Initializable {
         if (Platform.isFxApplicationThread()) {
             try {
                 filesListClient.getItems().clear();
-                Files.list(Paths.get(CLIENT_STORAGE+user+"/")).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
+                Files.list(Paths.get(CLIENT_STORAGE + user + "/")).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -106,7 +115,7 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 try {
                     filesListClient.getItems().clear();
-                    Files.list(Paths.get(CLIENT_STORAGE+user+"/")).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
+                    Files.list(Paths.get(CLIENT_STORAGE + user + "/")).map(p -> p.getFileName().toString()).forEach(o -> filesListClient.getItems().add(o));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -130,17 +139,17 @@ public class MainController implements Initializable {
     //Delete File From Server and read Filelist from Server
     public void pressBtnDeleteFromServer() {
         try {
-            Network.sendMsg(new CommandMessage(FILE_DELETE,sessionLabel.getText(), new FileRequest(filesListServer.getSelectionModel().selectedItemProperty().getValue(),sessionLabel.getText())));
+            Network.sendMsg(new CommandMessage(FILE_DELETE, sessionLabel.getText(), new FileRequest(filesListServer.getSelectionModel().selectedItemProperty().getValue(), sessionLabel.getText())));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST,sessionLabel.getText()));
+        Network.sendMsg(new CommandMessage(FILE_LIST_REQUEST, sessionLabel.getText()));
     }
 
     //Delete File From Client and read Filelist from Client
     public void pressBtnDeleteFromClient() throws IOException {
-        if (Files.exists(Paths.get(CLIENT_STORAGE +sessionLabel.getText()+"/"+ filesListClient.getSelectionModel().selectedItemProperty().getValue()))) {
-            Files.delete(Paths.get(CLIENT_STORAGE +sessionLabel.getText()+"/"+ filesListClient.getSelectionModel().selectedItemProperty().getValue()));
+        if (Files.exists(Paths.get(CLIENT_STORAGE + sessionLabel.getText() + "/" + filesListClient.getSelectionModel().selectedItemProperty().getValue()))) {
+            Files.delete(Paths.get(CLIENT_STORAGE + sessionLabel.getText() + "/" + filesListClient.getSelectionModel().selectedItemProperty().getValue()));
         }
         refreshLocalFilesList(sessionLabel.getText());
     }
@@ -148,9 +157,14 @@ public class MainController implements Initializable {
     public void initSessionID(final LoginManager loginManager, String sessionID) {
         sessionLabel.setText(sessionID);
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent event) {
+            @Override
+            public void handle(ActionEvent event) {
                 loginManager.logout();
             }
         });
+    }
+
+    private void regUser(CommandMessage am) {
+
     }
 }

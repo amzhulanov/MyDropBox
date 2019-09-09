@@ -2,12 +2,12 @@ package ru.geekbrains.server.authorization;
 
 import ru.geekbrains.common.Exception.LoginNonExistent;
 import ru.geekbrains.common.Exception.RegLoginException;
-import ru.geekbrains.common.User;
+import ru.geekbrains.common.UserRepr;
 
 import java.sql.SQLException;
 
 public interface AuthService {
-    boolean authUser(User user) throws LoginNonExistent, SQLException;
+    boolean authUser(UserRepr user) throws LoginNonExistent, SQLException;
 
-    void registrationUser(User user) throws RegLoginException;
+    void registrationUser(UserRepr user) throws RegLoginException;
 }

@@ -17,6 +17,16 @@ public class UserRepr {
         this.password = user.getPassword();
     }
 
+    public UserRepr(Integer id,String login, String password) {
+        this.id=id;
+        this.login = login;
+        this.password = password;
+    }
+    public UserRepr(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }

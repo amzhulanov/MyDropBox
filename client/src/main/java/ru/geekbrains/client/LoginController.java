@@ -24,12 +24,12 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+    @FXML
+    private Button regButton;
+
     public LoginController() {
     }
 
-    public String getSessionID() {
-        return this.sessionID;
-    }
 
     public void initManager(final LoginManager loginManager) {
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,6 +45,12 @@ public class LoginController {
                 }
             }
         });
+
+        regButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent event) {
+                loginManager.regUserShowScreen();
+            }
+        });
     }
 
     private void authorize() throws IOException, ClassNotFoundException {
@@ -54,6 +60,15 @@ public class LoginController {
         } else if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(AUTH_FAIL_RESPONSE)) {
             sessionID=null;
         }
+    }
+
+    public void authorize(String login, String name, String password, String passwordRepeat) throws IOException, ClassNotFoundException {
+        AbstractMessage am =Network.sendLogin(new AuthMessage(login,name,password,passwordRepeat));
+        if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_SUCCESS_RESPONSE)) {
+
+        } else if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_FAIL_RESPONSE)) {
+        }
+
 
     }
 }

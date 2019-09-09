@@ -2,7 +2,7 @@ package ru.geekbrains.server.authorization;
 
 import ru.geekbrains.common.Exception.LoginNonExistent;
 import ru.geekbrains.common.Exception.RegLoginException;
-import ru.geekbrains.common.User;
+import ru.geekbrains.common.UserRepr;
 
 import java.sql.SQLException;
 
@@ -16,9 +16,9 @@ public class AuthServiceJdbcImpl implements AuthService {
     }
 
     @Override
-    public boolean authUser(User user) throws LoginNonExistent, SQLException {//авторизовываю пользователя через userRepository
+    public boolean authUser(UserRepr user) throws LoginNonExistent, SQLException {//авторизовываю пользователя через userRepository
         String login = user.getLogin();
-        User searchUser = null;
+        UserRepr searchUser = null;
         searchUser = userRepository.findByLogin(login);//проверяю наличие имени в базе
         if (searchUser==null){
             throw new LoginNonExistent();
@@ -29,7 +29,7 @@ public class AuthServiceJdbcImpl implements AuthService {
 
 
     @Override
-    public void registrationUser(User user) throws RegLoginException {
+    public void registrationUser(UserRepr user) throws RegLoginException {
         if (!userRepository.insert(user)) {
             throw new RegLoginException();
         }

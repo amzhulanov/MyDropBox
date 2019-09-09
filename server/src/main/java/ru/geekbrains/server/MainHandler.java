@@ -76,6 +76,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private void checkUserLogin(ChannelHandlerContext ctx, AuthMessage authMessage) {
         ctx.writeAndFlush(new CommandMessage(AUTH_SUCCESS_RESPONSE, authMessage.getUser()));
+        //TODO переделать БД на H2
 //        UserRepr user = new UserRepr();
 //        UserRepository userRepository;
 //
@@ -97,6 +98,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private void regUser(ChannelHandlerContext ctx, RegMessage msg) {
         ctx.writeAndFlush(new CommandMessage(REG_SUCCESS_RESPONSE));
+        //TODO переделать БД на H2
 //        UserRepository userRepository;
 //        try {
 //            userRepository = new UserRepository(DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Novosibirsk", "root", "rootroot1"));

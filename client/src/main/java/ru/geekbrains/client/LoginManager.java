@@ -1,5 +1,8 @@
 package ru.geekbrains.client;
-
+/*
+*Class for demonstration all FormView
+*
+ */
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,7 +35,6 @@ public class LoginManager {
                     loader.<LoginController>getController();
             controller.initManager(this);
         } catch (IOException ex) {
-            System.out.println("showLoginScreen ex=" + ex);
         }
     }
 

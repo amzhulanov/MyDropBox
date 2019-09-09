@@ -11,13 +11,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import ru.geekbrains.server.authorization.UserRepository;
-import ru.geekbrains.server.authorization.AuthService;
-import ru.geekbrains.server.authorization.AuthServiceJdbcImpl;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class Server {
     private final static int MAX_OBJ_SIZE = 300 * 1024 * 1024;

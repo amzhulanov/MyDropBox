@@ -1,9 +1,6 @@
 package ru.geekbrains.server.authorization;
 
 
-import ru.geekbrains.common.User;
-import ru.geekbrains.common.UserRepr;
-
 import java.sql.*;
 
 public class UserRepository {

@@ -1,4 +1,8 @@
 package ru.geekbrains.client;
+/*
+ *Demonstration alert messsage
+ */
+
 
 import javafx.scene.control.Alert;
 

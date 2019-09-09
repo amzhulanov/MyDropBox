@@ -2,7 +2,7 @@ package ru.geekbrains.client;
 /**
  * @author JAM amzhulanov@ya.ru
  * Client DropBox
- * <p>
+ *
  * HomeWork geekbrains.ru
  */
 
@@ -29,7 +29,4 @@ public class MainClient extends Application {
         primaryStage.show();
     }
 
-    public LoginManager getLoginManager() {
-        return loginManager;
-    }
 }

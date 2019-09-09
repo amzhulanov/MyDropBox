@@ -1,4 +1,4 @@
-package ru.geekbrains.common;
+package ru.geekbrains.server.authorization;
 
 import java.io.Serializable;
 

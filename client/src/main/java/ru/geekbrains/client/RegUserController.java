@@ -53,16 +53,12 @@ public class RegUserController {
             @Override
             public void handle(ActionEvent event) {
                 AbstractMessage am = null;
-                System.out.println("Запускаю отправку пользователя на сервер логин=" + login.getText());
                 try {
                     am = Network.sendLogin(new RegMessage(login.getText(), name.getText(), password.getText(), passwordRepeat.getText()));
-                    System.out.println("Получен ответ от сервера");
                     if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_SUCCESS_RESPONSE)) {
-                        System.out.println("Авторизация пройдена. Включаю показ экрана логина");
-                        //sessionID = ((CommandMessage) am).getUser();
+                        //TODO pass the name of the session
                         loginManager.showLoginScreen();
                     } else if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_FAIL_RESPONSE)) {
-                        System.out.println("Авторизация провалена. Запускаю процедуру обработки ошибки");
                         errorReg(am);
 
                     }
@@ -85,13 +81,13 @@ public class RegUserController {
 
     public void errorReg(AbstractMessage am) {
         if (((CommandMessage) am).getEx().equals(RegPasswordException.class)) {
-            regUserManager.alertReg("Ошибка пароля", "Пароли должны совпадать", Alert.AlertType.WARNING);
+            regUserManager.alertReg("Error password", "Passwords must match", Alert.AlertType.WARNING);
         }
         if (((CommandMessage) am).getEx().equals(RegLoginException.class)) {
-            regUserManager.alertReg("Ошибка регистрации", "Такой логин уже зарегистрирован", Alert.AlertType.WARNING);
+            regUserManager.alertReg("Error registr", "This login is already registered", Alert.AlertType.WARNING);
         }
         if (((CommandMessage) am).getEx().equals(ResourceException.class)) {
-            regUserManager.alertReg("Ошибка регистрации", "Просто ошибка", Alert.AlertType.WARNING);
+            regUserManager.alertReg("Error registr", "Unknown error", Alert.AlertType.WARNING);
         }
     }
 }

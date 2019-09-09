@@ -59,16 +59,8 @@ public class LoginController {
             sessionID = ((CommandMessage) am).getUser();
         } else if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(AUTH_FAIL_RESPONSE)) {
             sessionID=null;
+            //TODO processing error
         }
     }
 
-    public void authorize(String login, String name, String password, String passwordRepeat) throws IOException, ClassNotFoundException {
-        AbstractMessage am =Network.sendLogin(new AuthMessage(login,name,password,passwordRepeat));
-        if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_SUCCESS_RESPONSE)) {
-
-        } else if (am instanceof CommandMessage && ((CommandMessage) am).getCommandMessage().equals(REG_FAIL_RESPONSE)) {
-        }
-
-
-    }
 }

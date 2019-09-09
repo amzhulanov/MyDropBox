@@ -1,4 +1,4 @@
-package ru.geekbrains.common;
+package ru.geekbrains.server.authorization;
 
 public class UserRepr {
 
@@ -9,12 +9,6 @@ public class UserRepr {
     private String password;
 
     public UserRepr() {
-    }
-
-    public UserRepr(User user) {
-        this.id = user.getId();
-        this.login = user.getLogin();
-        this.password = user.getPassword();
     }
 
     public UserRepr(Integer id,String login, String password) {

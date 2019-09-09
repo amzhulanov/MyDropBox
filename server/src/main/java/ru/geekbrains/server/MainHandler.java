@@ -75,43 +75,45 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void checkUserLogin(ChannelHandlerContext ctx, AuthMessage authMessage) {
-        UserRepr user = new UserRepr();
-        UserRepository userRepository;
-
-        try {
-            userRepository = new UserRepository(DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Novosibirsk", "root", "rootroot1"));
-        } catch (SQLException e) {
-            return;
-        }
-        try {
-            user = userRepository.findByLogin(authMessage.getUser());
-            if (user != null && user.getPassword().equals(authMessage.getPassword())) {
-                ctx.writeAndFlush(new CommandMessage(AUTH_SUCCESS_RESPONSE, user.getLogin()));
-            }
-        } catch (Exception e) {
-            ctx.writeAndFlush(new CommandMessage(AUTH_FAIL_RESPONSE));
-
-        }
+        ctx.writeAndFlush(new CommandMessage(AUTH_SUCCESS_RESPONSE, authMessage.getUser()));
+//        UserRepr user = new UserRepr();
+//        UserRepository userRepository;
+//
+//        try {
+//            userRepository = new UserRepository(DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Novosibirsk", "root", "rootroot1"));
+//        } catch (SQLException e) {
+//            return;
+//        }
+//        try {
+//            user = userRepository.findByLogin(authMessage.getUser());
+//            if (user != null && user.getPassword().equals(authMessage.getPassword())) {
+//                ctx.writeAndFlush(new CommandMessage(AUTH_SUCCESS_RESPONSE, user.getLogin()));
+//            }
+//        } catch (Exception e) {
+//            ctx.writeAndFlush(new CommandMessage(AUTH_FAIL_RESPONSE));
+//
+//        }
     }
 
     private void regUser(ChannelHandlerContext ctx, RegMessage msg) {
-        UserRepository userRepository;
-        try {
-            userRepository = new UserRepository(DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Novosibirsk", "root", "rootroot1"));
-        } catch (SQLException e) {
-            return;
-        }
-        if (msg.getPassword()==null||msg.getPasswordRepeat()==null|| !msg.getPassword().equals(msg.getPasswordRepeat())){
-            ctx.writeAndFlush(new CommandMessage(REG_FAIL_RESPONSE,new RegPasswordException()));
-        } if (userRepository.findByLogin(msg.getUser())!=null){
-            ctx.writeAndFlush(new CommandMessage(REG_FAIL_RESPONSE,new RegLoginException()));
-        }
-        if (userRepository.insert(new UserRepr(msg.getName(),msg.getPassword()))){
-            createDir(msg.getName());
-            ctx.writeAndFlush(new CommandMessage(REG_SUCCESS_RESPONSE));
-        }else{
-            ctx.writeAndFlush(new CommandMessage(REG_FAIL_RESPONSE,new ResourceException()));
-        }
+        ctx.writeAndFlush(new CommandMessage(REG_SUCCESS_RESPONSE));
+//        UserRepository userRepository;
+//        try {
+//            userRepository = new UserRepository(DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee_test_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Novosibirsk", "root", "rootroot1"));
+//        } catch (SQLException e) {
+//            return;
+//        }
+//        if (msg.getPassword()==null||msg.getPasswordRepeat()==null|| !msg.getPassword().equals(msg.getPasswordRepeat())){
+//            ctx.writeAndFlush(new CommandMessage(REG_FAIL_RESPONSE,new RegPasswordException()));
+//        } if (userRepository.findByLogin(msg.getUser())!=null){
+//            ctx.writeAndFlush(new CommandMessage(REG_FAIL_RESPONSE,new RegLoginException()));
+//        }
+//        if (userRepository.insert(new UserRepr(msg.getName(),msg.getPassword()))){
+//            createDir(msg.getName());
+//            ctx.writeAndFlush(new CommandMessage(REG_SUCCESS_RESPONSE));
+//        }else{
+//            ctx.writeAndFlush(new CommandMessage(REG_FAIL_RESPONSE,new ResourceException()));
+//        }
     }
 
     private void createDir(String name) {

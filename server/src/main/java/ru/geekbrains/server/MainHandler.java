@@ -29,7 +29,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 if (msg instanceof AuthMessage) {
                     checkUserLogin(ctx, (AuthMessage) msg);
                 } else if (msg instanceof RegMessage) {
-                    regUser(ctx,(RegMessage) msg);
+                    regUser(ctx, (RegMessage) msg);
                 } else if (msg instanceof FileRequest) {
                     fileListRequest(ctx, (FileRequest) msg, ((FileRequest) msg).getUser());
                 } else if (msg instanceof FileMessage) {
@@ -45,7 +45,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             ReferenceCountUtil.release(msg);
         }
     }
-
 
 
     private void fileListRequest(ChannelHandlerContext ctx, FileRequest fileRequest, String user) throws IOException {

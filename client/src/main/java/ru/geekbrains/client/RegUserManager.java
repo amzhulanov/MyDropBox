@@ -5,18 +5,18 @@ package ru.geekbrains.client;
 
 
 import javafx.scene.control.Alert;
+import ru.geekbrains.common.NewDirectory;
 
 public class RegUserManager {
+    private String CLIENT_STORAGE = "client/client_storage/";
 
 
-    public void alertReg(String title, String contextText, Alert.AlertType type) {
-        Alert alert = new Alert(type);
 
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(contextText);
 
-        alert.showAndWait();
+
+    void createNewDir(String login){
+        NewDirectory newDirectory=new NewDirectory();
+        newDirectory.createDir(CLIENT_STORAGE,login);
     }
 
 

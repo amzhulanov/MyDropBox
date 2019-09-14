@@ -7,17 +7,28 @@ public class FileAbout implements Serializable {
 
     private File file;
 
-    private String filename;
+    private String fileName;
 
-    private long filesize;
+    private long fileSize;
 
-    public String getFilename() {
-        return filename;
+    private String fileDateCreate;
+
+    public String getFileDateCreate() {
+        return fileDateCreate;
     }
 
-    public FileAbout(File file, String filename, long filesize) {
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public FileAbout(File file, String fileName, long fileSize,String fileDateCreate) {
         this.file = file;
-        this.filename = filename;
-        this.filesize = filesize;
+        this.fileName = fileName;
+        this.fileSize = fileSize;
+        this.fileDateCreate=fileDateCreate;
     }
 }

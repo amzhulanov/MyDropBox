@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,9 @@ public class FileListMessage extends AbstractMessage {
     public FileListMessage(Path path) throws IOException {
         for (Object str:Files.list(path).map(Path::toFile).toArray()) {
             File file=new File(str.toString());
-            fileListName.add(new FileAbout(file,file.getName(),file.length()));
+            BasicFileAttributes attr = Files.getFileAttributeView(path, BasicFileAttributeView.class).readAttributes();
+
+            fileListName.add(new FileAbout(file,file.getName(),file.length(),attr.creationTime().toString()));
         }
     }
 }

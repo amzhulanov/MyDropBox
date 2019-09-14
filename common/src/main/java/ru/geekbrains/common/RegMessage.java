@@ -1,7 +1,7 @@
 package ru.geekbrains.common;
 
 public class RegMessage  extends AbstractMessage {
-    private String user;
+    private String login;
     private String name;
 
     private String password;
@@ -10,19 +10,19 @@ public class RegMessage  extends AbstractMessage {
 
 
 
-    public RegMessage(String user, String name, String password, String passwordRepeat) {
-        this.user = user;
+    public RegMessage(String login, String name, String password, String passwordRepeat) {
+        this.login = login;
         this.name=name;
         this.password = password;
         this.passwordRepeat=passwordRepeat;
     }
 
-    public String getUser() {
-        return user;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {

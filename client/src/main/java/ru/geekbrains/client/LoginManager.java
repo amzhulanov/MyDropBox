@@ -6,6 +6,7 @@ package ru.geekbrains.client;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 
@@ -64,5 +65,14 @@ public class LoginManager {
         } catch (IOException ex) {
             System.out.println("regUserShowScreen ex=" + ex);
         }
+    }
+
+    public void alertReg(String title, String contextText, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(contextText);
+        alert.showAndWait();
     }
 }

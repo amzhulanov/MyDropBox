@@ -1,16 +1,18 @@
 package ru.geekbrains.common;
 
+import ru.geekbrains.common.fileUtilities.FileUser;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileMessage extends AbstractMessage {
-    private String filename;
+    private String fileName;
     private byte[] data;
     private String user;
 
-    public String getFilename() {
-        return filename;
+    public String getFileName() {
+        return fileName;
     }
 
     public String getUser() {
@@ -22,13 +24,14 @@ public class FileMessage extends AbstractMessage {
     }
 
     public FileMessage(Path path,String user) throws IOException {
-        this.filename = path.getFileName().toString();
+        this.fileName = path.getFileName().toString();
         this.data = Files.readAllBytes(path);
         this.user=user;
     }
 
-    public FileMessage(String filename, String user) {
-        this.filename = filename;
+    public FileMessage(String fileName, String user) {
+        this.fileName = fileName;
         this.user = user;
     }
+
 }

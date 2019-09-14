@@ -5,19 +5,22 @@ public class UserRepr {
     private int id;
 
     private String login;
+    private String name;
 
     private String password;
 
     public UserRepr() {
     }
 
-    public UserRepr(Integer id,String login, String password) {
+    public UserRepr(Integer id,String login ,String name,  String password) {
         this.id=id;
         this.login = login;
+        this.name = name;
         this.password = password;
     }
-    public UserRepr(String login, String password) {
+    public UserRepr(String login,String name, String password) {
         this.login = login;
+        this.name = name;
         this.password = password;
     }
 
@@ -45,4 +48,11 @@ public class UserRepr {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
